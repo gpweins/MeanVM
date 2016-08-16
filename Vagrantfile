@@ -67,26 +67,18 @@ Vagrant.configure(2) do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  config.vm.provision "shell", inline: <<-SHELL
-    sudo apt-get update -y
 
-    # Configure the locales
-    echo "export LANGUAGE=en_US.UTF-8" | sudo tee -a ~/.profile
-    echo "export LANG=en_US.UTF-8" | sudo tee -a ~/.profile
-    echo "export LC_ALL=en_US.UTF-8" | sudo tee -a ~/.profile
+  config.vm.provision "shell", path: "provision/general.sh"
 
-    echo "export LANGUAGE=en_US.UTF-8" | sudo tee -a ~/.bashrc
-    echo "export LANG=en_US.UTF-8" | sudo tee -a ~/.bashrc
-    echo "export LC_ALL=en_US.UTF-8" | sudo tee -a ~/.bashrc
-
-    sudo apt-get install -y git-all
-  SHELL
+  config.vm.provision "shell", path: "provision/git/git.sh"
   config.vm.provision "file", source: "provision/git/.gitconfig", destination: ".gitconfig"
   config.vm.provision "file", source: "provision/git/.bash_aliases", destination: ".bash_aliases"
 
   config.vm.provision "file", source: "provision/mongo/mongod.conf", destination: "mongod.conf"
   config.vm.provision "shell", path: "provision/mongo/mongo.sh"
 
+
+  config.vm.provision "shell", path: "provision/node/node_dependencies.sh"
   config.vm.provision "shell", path: "provision/node/nvm.sh", privileged: false
 
 end
